@@ -1,106 +1,112 @@
-# Python Output Module Boilerplate
+# Google Sheets
 
-|              |                                                                  |
-| ------------ | ---------------------------------------------------------------- |
-| name         | Python Output Module Boilerplate                             |
-| version      | v1.0.0                                                           |
-| GitHub       | [python-output-module-boilerplate](https://github.com/weeve-modules/python-egress-module-boilerplate) |
-| authors      | Jakub Grzelak, Nithin Saai                                       |
+|                |                                       |
+| -------------- | ------------------------------------- |
+| Name           | Google Sheets                           |
+| Version        | v1.0.0                                |
+| DockerHub | [weevenetwork/google-sheets](https://hub.docker.com/r/weevenetwork/google-sheets) |
+| Authors        | Jakub Grzelak                    |
 
-***
-## Table of Content
-
-- [Python Output Module Boilerplate](#python-output-module-boilerplate)
-  - [Table of Content](#table-of-content)
+- [Google Sheets](#google-sheets)
   - [Description](#description)
-  - [Directory Structure](#directory-structure)
-    - [File Tree](#file-tree)
-  - [Module Variables](#module-variables)
-  - [As a module developer](#as-a-module-developer)
+  - [Enabling APIs and downloading credentials from Google Cloud](#enabling-apis-and-downloading-credentials-from-google-cloud)
+  - [Environment Variables](#environment-variables)
+    - [Module Specific](#module-specific)
+    - [Set by the weeve Agent on the edge-node](#set-by-the-weeve-agent-on-the-edge-node)
   - [Dependencies](#dependencies)
-***
+  - [Input](#input)
+  - [Output](#output)
 
-## Description 
+## Description
 
-This is a Python Output Boilerplate module and it serves as a starting point for developers to build output modules for weeve platform and data services.
-Navigate to [As a module developer](#as-a-module-developer) to learn how to use this module. You can also explore our weeve documentation on [weeve Modules](https://docs.weeve.engineering/concepts/edge-applications/weeve-modules) and [module tutorials](https://docs.weeve.engineering/guides/how-to-create-a-weeve-module) to learn more details. 
+Write data to a selected Google Sheet. This module will require enabling Google Drive API and Google Sheets API in Google Cloud Console. Additionally, a Service Account will need to be created within Google Cloud to enable authentication of the user. Later, module settings referring to the credentials should be provided from the JSON file generated in Google Cloud Console. See the next section on setting up your Google Cloud.
 
-## Directory Structure
+## Enabling APIs and downloading credentials from Google Cloud
 
-Most important resources:
+To connect Google Sheets with this module, the users have to download their credentials in a JSON file. Go to [Google Cloud Platform](https://console.cloud.google.com/getting-started) and then:
 
-| name              | description                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------ |
-| src               | All source code related to the module (API and module code).                                           |
-| src/main.py       | Entry-point for the module.                                                                            |
-| src/api           | Code responsible for setting module's API and communication with weeve ecosystem.                      |
-| src/module        | Code related to the module's business logic. This is working directory for module developers.          |
-| docker            | All resources related to Docker (Dockerfile, docker-entrypoint.sh, docker-compose.yml).                |
-| example.env       | Holds examples of environment variables for running the module.                                        |
-| requirements.txt  | A list of module dependencies.                                                                         |
-| Module.yaml       | Module's YAML file that is later used by weeve platform Data Service Designer                          |
+* Click on `Select a Project`
+* Click on `New Project`
+* Write the name of your new project and click on `Create`
+* Go to the new project that you have just created
+* In the left panel of your project select `APIs & Services` and then select `Library`
+* Search for `Google Drive API` and enable it
+* Once it is enabled, click on `Create Credentials` on the upper-right corner
+* Set API to `Google Drive API`, set accessed data to `Application data` and answer `No, I'm not using them` to the question on using the API with Compute Engine, Kubernetes etc.
+* Then, choose a name of your service account and `Create and Continue`
+* Select the Role as `Project > Editor`
+* After this, open the left panel again, click on `APIs & Services` and select `Credentials`
+* In the `Service Account` section click on your **client email**
+* Go to the `Keys` section and click on `Add Key > Create new key`
+* A JSON file with your credentials will be downloaded to your computer. IMPORTANT: Contents of this JSON file need to be provided as the module settings on the weeve IoT Platform when creating an edge application. Names of the module settings should match those in the JSON file.
+* Go to the `APIs & Services` again and search for `Google Sheets API` in the `Library`
+* Enable `Google Sheets API` as you previously did for `Google Drive API`
 
-### File Tree
+## Environment Variables
 
-```bash
-├── src
-│   ├── api
-│   │   ├── __init__.py
-│   │   ├── log.py # log configurations
-│   │   ├── processing_thread.py # a separate thread responsible for triggering data outputting
-│   │   └── request_handler.py # handles module's API and receives data from a previous module
-│   ├── module
-│   │   ├── main.py # [*] main logic for the module
-│   │   └── validator.py # [*] validation logic for incoming data
-│   └── main.py # module entrypoint
-├── docker
-│   ├── .dockerignore
-│   ├── docker-compose.yml
-│   ├── docker-entrypoint.sh
-│   └── Dockerfile
-├── example.env # sample environment variables for the module
-├── Module.yaml # used by weeve platform to generate resource in Data Service Designer section
-├── makefile
-├── README.md
-├── example.README.md # README template for writing module documentation
-└── requirements.txt # module dependencies, used for building Docker image
-```
+### Module Specific
 
-## Module Variables
+The following module configurations can be provided in a data service designer section on weeve platform:
 
-There are 5 module variables that are required by each module to correctly function within weeve ecosystem. In development, these variables can overridden for testing purposes. In production, these variables are set by weeve Agent.
+| Name                 | Environment Variables     | type     | Description                                              |
+| -------------------- | ------------------------- | -------- | -------------------------------------------------------- |
+| Project ID    | PROJECT_ID         | string   | ID of a project in Google Cloud from JSON file.            |
+| Private Key ID    | PRIVATE_KEY_ID         | string  | ID of a private key from JSON file.            |
+| Private Key    | PRIVATE_KEY         | string  | Private key from JSON file.            |
+| Client Email    | CLIENT_EMAIL         | string  | Email of a client set up in Google Cloud from JSON file.            |
+| Client ID    | CLIENT_ID         | string  | Client ID set up in Google Cloud from JSON file.            |
+| Spreadsheet Title    | SPREADSHEET_TITLE         | string  | Title of the selected spreadsheet.            |
+| Worksheet Title    | WORKSHEET_TITLE         | string  | Title of the selected worksheet (page) in the spreadsheet.            |
+| Column Headers    | COLUMN_HEADERS         | bool  | Whether the spreadsheet has defined column headers in the first row. If yes, then the module will match data labels with headers when writing data to the spreadsheet.            |
 
-| Environment Variables | type   | Description                                       |
-| --------------------- | ------ | ------------------------------------------------- |
-| MODULE_NAME           | string | Name of the module                                |
-| MODULE_TYPE           | string | Type of the module (Input, Processing, Output)    |
-| LOG_LEVEL             | string | Allowed log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL. Refer to `logging` package documentation. |
-| INGRESS_HOST          | string | Host to which data will be received               |
-| INGRESS_PORT          | string | Port to which data will be received               |
 
-## As a module developer
+### Set by the weeve Agent on the edge-node
 
-RECOMMENDED:
-Make sure you have [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/)
+Other features required for establishing the inter-container communication between modules in a data service are set by weeve agent.
 
-A module developer needs to add all the configuration and business logic.
-
-All the module logic can be written in the module package in `src/module` directory.
-
-   * The files can me modified for the module
-      1. `module/validator.py`
-         * The function `data_validation` takes the JSON data received from the previous module.
-         * Incoming data can be validated here.
-         * Checks if data is of type permitted by a module (i.e. `dict` or `list`)>
-         * Checks if data contains required fields.
-         * Returns Error if data are not valid.
-      2. `module/module.py`
-         * The function `module_main` takes the JSON data received from the previous module.
-         * All the business logic about modules are written here.
-         * Returns error message.
+| Environment Variables | type   | Description                                    |
+| --------------------- | ------ | ---------------------------------------------- |
+| MODULE_NAME           | string | Name of the module                             |
+| MODULE_TYPE           | string | Type of the module (Input, Processing, Output)  |
+| INGRESS_HOST          | string | Host to which data will be received            |
+| INGRESS_PORT          | string | Port to which data will be received            |
 
 ## Dependencies
 
-The following are module dependencies:
+```txt
+bottle
+gspread
+oauth2client
+```
 
-* bottle
+## Input
+
+Input to this module is:
+
+* JSON body single object, example:
+
+```json
+{
+   "temperature": 12,
+   "device": "Konin-1"
+}
+```
+
+* batch of JSON body objects, example:
+
+```json
+[
+    {
+        "temperature": 12,
+        "device": "Konin-1"
+    },
+    {
+        "temperature": 15,
+        "device": "Konin-1"
+    }
+]
+```
+
+## Output
+
+New records written to a selected spreadsheet in Google Sheets.
