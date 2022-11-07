@@ -16,6 +16,6 @@ services:
       CLIENT_ID: "client-id-from-json-file"
       SPREADSHEET_TITLE: "mySpreadsheet"
       WORKSHEET_TITLE: "Sheet1"
-      COLUMN_HEADERS: False
+      HAS_COLUMN_HEADERS: False
     ports:
       - 80:80

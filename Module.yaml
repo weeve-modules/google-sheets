@@ -61,12 +61,14 @@ envs:                                   # Array of environment variables that wi
     type: 'text'
     options: []
     dependencies: []
-  - name: Column Headers
-    key: COLUMN_HEADERS
+  - name: Has Column Headers
+    key: HAS_COLUMN_HEADERS
     description: Whether the spreadsheet has defined column headers in the first row.
     value: 'False'
-    type: 'text'
-    options: []
+    type: 'select'
+    options:
+        - 'True'
+        - 'False'
     dependencies: []
 ports: []
 envPorts: []

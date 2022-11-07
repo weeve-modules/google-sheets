@@ -8,5 +8,5 @@ PARAMS = {
     "CLIENT_ID": getenv("CLIENT_ID", ""),
     "SPREADSHEET_TITLE": getenv("SPREADSHEET_TITLE", ""),
     "WORKSHEET_TITLE": getenv("WORKSHEET_TITLE", ""),
-    "COLUMN_HEADERS": bool(getenv("COLUMN_HEADERS", "False"))
+    "HAS_COLUMN_HEADERS": bool(getenv("HAS_COLUMN_HEADERS", "False"))
 }

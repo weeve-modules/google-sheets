@@ -17,7 +17,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_dict(CREDS_DICT, ['htt
 gc = gspread.authorize(credentials)
 worksheet = gc.open(PARAMS['SPREADSHEET_TITLE']).worksheet(PARAMS['WORKSHEET_TITLE'])
 
-if PARAMS["COLUMN_HEADERS"]:
+if PARAMS["HAS_COLUMN_HEADERS"]:
     # read headers from the first row in the spreadsheet
     COLUMN_HEADERS = worksheet.row_values(1)
 else:

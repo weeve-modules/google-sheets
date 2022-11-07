@@ -57,7 +57,7 @@ The following module configurations can be provided in a data service designer s
 | Client ID    | CLIENT_ID         | string  | Client ID set up in Google Cloud from JSON file.            |
 | Spreadsheet Title    | SPREADSHEET_TITLE         | string  | Title of the selected spreadsheet.            |
 | Worksheet Title    | WORKSHEET_TITLE         | string  | Title of the selected worksheet (page) in the spreadsheet.            |
-| Column Headers    | COLUMN_HEADERS         | bool  | Whether the spreadsheet has defined column headers in the first row. If yes, then the module will match data labels with headers when writing data to the spreadsheet.            |
+| Has Column Headers    | HAS_COLUMN_HEADERS         | bool  | Whether the spreadsheet has defined column headers in the first row. If yes, then the module will match data labels with headers when writing data to the spreadsheet.            |
 
 
 ### Set by the weeve Agent on the edge-node
