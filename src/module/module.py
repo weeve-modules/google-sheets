@@ -47,7 +47,7 @@ def module_main(received_data: any) -> str:
                 if COLUMN_HEADERS:
                     single_row = [data[label] for label in COLUMN_HEADERS]
                 else:
-                    single_row = [data[label] for label in data.keys()]
+                    single_row = list(data.values())
 
                 rows.append(single_row)
 
@@ -58,7 +58,7 @@ def module_main(received_data: any) -> str:
             if COLUMN_HEADERS:
                 single_row = [received_data[label] for label in COLUMN_HEADERS]
             else:
-                single_row = [received_data[label] for label in received_data.keys()]
+                single_row = list(received_data.values())
 
             worksheet.append_row(single_row)
 
